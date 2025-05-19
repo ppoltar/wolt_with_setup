@@ -67,9 +67,6 @@
               - name: Check contents of downloaded
                 run: ls -R .
 
-              - name: Check contents of downloaded reports
-                run: ls -R reports
-
               - name: Install Allure CLI
                 run: |
                   wget https://github.com/allure-framework/allure2/releases/download/2.17.2/allure-2.17.2.zip
@@ -77,10 +74,10 @@
                   sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
 
               - name: Generate Allure Report
-                run: allure generate reports/allure-results --clean -o reports/allure-report
+                run: allure generate allure-results --clean -o allure-report
 
               - name: Upload Allure report as artifact
                 uses: actions/upload-artifact@v4
                 with:
                   name: allure-report
-                  path: reports/allure-report
+                  path: allure-report
