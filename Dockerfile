@@ -9,4 +9,4 @@ RUN playwright install --with-deps
 
 COPY . .
 
-CMD ["pytest", "-n", "3", "-m", "availability", "--maxfail=2", "--capture=sys", "--alluredir=reports/allure-results"]
+CMD ["pytest", "-n", "3", "--maxfail=2", "--capture=sys", "--alluredir=reports/allure-results"]

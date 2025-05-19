@@ -10,7 +10,7 @@ pip install --upgrade pip
 pip install -r requirements.txt
 
 echo "✅ Setup complete. To activate the virtual environment, run:"
-echo "source venv/bin/activate\n"
+echo "source venv/bin/activate"
 
 echo "✅ To Generate allure report, run:"
-echo "allure generate reports/allure-results --clean -o reports/allure-report\n"
+echo "allure generate reports/allure-results --clean -o reports/allure-report"
