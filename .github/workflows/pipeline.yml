@@ -70,16 +70,10 @@
                 sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
 
             - name: Generate Allure Report
-              run: allure generate reports/allure-results --clean -o reports/allure-report
+              run: allure generate reports/reports/allure-results --clean -o reports/allure-report
 
             - name: Upload Allure report as artifact
               uses: actions/upload-artifact@v4
               with:
                 name: allure-report
                 path: reports/allure-report
-
-            - name: Add link to Allure Report in summary
-              run: |
-                echo "### ✅ Allure Report Generated" >> $GITHUB_STEP_SUMMARY
-                echo "You can download it from the artifacts section of this run." >> $GITHUB_STEP_SUMMARY
-                echo "[Go to Workflow Run](https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }})" >> $GITHUB_STEP_SUMMARY
