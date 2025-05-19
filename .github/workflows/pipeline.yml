@@ -25,31 +25,34 @@ jobs:
 
       # Step 3: Install make and dependencies
       - name: Install make and dependencies
-        run: sudo apt-get update && sudo apt-get install -y make curl
+        run: sudo apt-get update && sudo apt-get install -y make curl unzip
 
       # Step 4: Build Docker image and run tests
       - name: Build Docker image
         run: docker build -t my-test-container .
 
+      # Step 5: Run tests with pytest and generate Allure results
       - name: Run tests with pytest (Generate Allure results)
-        run: docker run --rm -v $(pwd)/reports:/app/reports my-test-container
+        run: |
+          docker run --rm -v $(pwd)/reports:/app/reports my-test-container
+          ls -R $(pwd)/reports  # Debugging: List files to ensure allure-results is there
 
-      # Step 5: Install Allure command-line tool
+      # Step 6: Install Allure command-line tool
       - name: Install Allure CLI
         run: |
           wget https://github.com/allure-framework/allure2/releases/download/2.17.2/allure-2.17.2.zip
           unzip allure-2.17.2.zip -d /opt/
           sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
 
-      # Step 6: Generate Allure Report from the test results
+      # Step 7: Debugging: List files in the reports directory (optional)
+      - name: List files in reports directory (for debugging)
+        run: ls -R reports
+
+      # Step 8: Generate Allure Report from the test results
       - name: Generate Allure Report
         run: allure generate reports/allure-results --clean -o reports/allure-report
 
-      # Step 7: Debugging: List files in the reports directory (optional)
-      - name: List files in reports directory
-        run: ls -R reports
-
-      # Step 8: Upload Allure Report as Artifact
+      # Step 9: Upload Allure Report as Artifact
       - name: Upload Allure Report as Artifact
         uses: actions/upload-artifact@v3
         with:
