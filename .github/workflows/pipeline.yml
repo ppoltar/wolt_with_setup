@@ -14,20 +14,20 @@ jobs:
         run: make install
 
 
-      # Step 1: Install Allure CLI (to generate the report)
-      - name: Install Allure CLI
-        run: |
-          wget https://github.com/allure-framework/allure2/releases/download/2.17.2/allure-2.17.2.zip
-          unzip allure-2.17.2.zip -d /opt/
-          sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
-
-      # Step 2: Generate Allure Report from the test results
-      - name: Generate Allure Report
-        run: allure generate reports/allure-results --clean -o reports/allure-report
-
-      # Step 3: Upload Allure report as an artifact
-      - name: Upload Allure report as artifact
-        uses: actions/upload-artifact@v3
-        with:
-          name: allure-report
-          path: reports/allure-report
+#      # Step 1: Install Allure CLI (to generate the report)
+#      - name: Install Allure CLI
+#        run: |
+#          wget https://github.com/allure-framework/allure2/releases/download/2.17.2/allure-2.17.2.zip
+#          unzip allure-2.17.2.zip -d /opt/
+#          sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
+#
+#      # Step 2: Generate Allure Report from the test results
+#      - name: Generate Allure Report
+#        run: allure generate reports/allure-results --clean -o reports/allure-report
+#
+#      # Step 3: Upload Allure report as an artifact
+#      - name: Upload Allure report as artifact
+#        uses: actions/upload-artifact@v3
+#        with:
+#          name: allure-report
+#          path: reports/allure-report

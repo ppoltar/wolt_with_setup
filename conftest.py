@@ -66,6 +66,7 @@ def page(request):
 
     with sync_playwright() as p:
         logger.info("Launching browser...")
+        logger.info(f"headless mode is: {is_docker}...")
         browser = p.chromium.launch(headless=is_docker)
         context = browser.new_context(record_video_dir=f'{VIDEO_DIR}/{test_name}')
         context.tracing.start(screenshots=True, snapshots=True)
