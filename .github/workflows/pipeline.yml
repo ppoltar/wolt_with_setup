@@ -12,16 +12,16 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Build Docker image
-        run: make build  # this must tag as `my-app:latest` or similar
+        run: make build
 
       - name: Save Docker image
-        run: docker save my-app:latest -o my-app.tar
+        run: docker save my-test-container:latest -o my-test-container.tar
 
       - name: Upload Docker image as artifact
         uses: actions/upload-artifact@v3
         with:
-          name: my-app-image
-          path: my-app.tar
+          name: my-test-container-image
+          path: my-test-container.tar
 
   test:
     name: Run Tests in Docker
@@ -35,10 +35,10 @@ jobs:
       - name: Download Docker image artifact
         uses: actions/download-artifact@v3
         with:
-          name: my-app-image
+          name: my-test-container-image
 
       - name: Load Docker image
-        run: docker load -i my-app.tar
+        run: docker load -i my-test-container.tar
 
       - name: Run tests in Docker container
         run: make test
