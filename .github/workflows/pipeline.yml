@@ -1,83 +1,86 @@
-    name: Run Tests in Docker
+      name: Run Tests in Docker
 
-    on: [push, pull_request]
+      on: [push, pull_request]
 
-    jobs:
-      build-image:
-        name: Build Docker Image
-        runs-on: ubuntu-latest
-
-        steps:
-          - name: Checkout repo
-            uses: actions/checkout@v4
-
-          - name: Build Docker image
-            run: make build
-
-          - name: Save Docker image
-            run: docker save my-test-container:latest -o my-test-container.tar
-
-          - name: Upload Docker image as artifact
-            uses: actions/upload-artifact@v4
-            with:
-              name: my-test-container-image
-              path: my-test-container.tar
-
-      test:
-        name: Run tests and upload reports folder
-        runs-on: ubuntu-latest
-        needs: build-image
-
-        steps:
-          - name: Checkout repo
-            uses: actions/checkout@v4
-
-          - name: Download Docker image artifact
-            uses: actions/download-artifact@v4
-            with:
-              name: my-test-container-image
-
-          - name: Load Docker image
-            run: docker load -i my-test-container.tar
-
-          - name: Run tests in Docker container
-            run: make test
-
-          - name: List contents of reports folder
-            run: ls -R reports
-
-          - name: Upload all reports as artifacts
-            uses: actions/upload-artifact@v4
-            with:
-              name: reports
-              path: reports
-
-
-      generate-allure-report:
-          name: Generate Allure Report
+      jobs:
+        build-image:
+          name: Build Docker Image
           runs-on: ubuntu-latest
-          needs: test
+
           steps:
-            - name: Download reports artifact
-              uses: actions/download-artifact@v4
-              with:
-                name: reports
-                path: .
+            - name: Checkout repo
+              uses: actions/checkout@v4
 
-            - name: Check contents of downloaded reports
-              run: ls -R reports
+            - name: Build Docker image
+              run: make build
 
-            - name: Install Allure CLI
-              run: |
-                wget https://github.com/allure-framework/allure2/releases/download/2.17.2/allure-2.17.2.zip
-                unzip allure-2.17.2.zip -d /opt/
-                sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
+            - name: Save Docker image
+              run: docker save my-test-container:latest -o my-test-container.tar
 
-            - name: Generate Allure Report
-              run: allure generate reports/reports/allure-results --clean -o reports/allure-report
-
-            - name: Upload Allure report as artifact
+            - name: Upload Docker image as artifact
               uses: actions/upload-artifact@v4
               with:
-                name: allure-report
-                path: reports/allure-report
+                name: my-test-container-image
+                path: my-test-container.tar
+
+        test:
+          name: Run tests and upload reports folder
+          runs-on: ubuntu-latest
+          needs: build-image
+
+          steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+
+            - name: Download Docker image artifact
+              uses: actions/download-artifact@v4
+              with:
+                name: my-test-container-image
+
+            - name: Load Docker image
+              run: docker load -i my-test-container.tar
+
+            - name: Run tests in Docker container
+              run: make test
+
+            - name: List contents of reports folder
+              run: ls -R reports
+
+            - name: Upload all reports as artifacts
+              uses: actions/upload-artifact@v4
+              with:
+                name: reports
+                path: reports/**/*
+
+
+        generate-allure-report:
+            name: Generate Allure Report
+            runs-on: ubuntu-latest
+            needs: test
+            steps:
+              - name: Download reports artifact
+                uses: actions/download-artifact@v4
+                with:
+                  name: reports
+                  path: .
+
+              - name: Check contents of downloaded
+                run: ls -R .
+
+              - name: Check contents of downloaded reports
+                run: ls -R reports
+
+              - name: Install Allure CLI
+                run: |
+                  wget https://github.com/allure-framework/allure2/releases/download/2.17.2/allure-2.17.2.zip
+                  unzip allure-2.17.2.zip -d /opt/
+                  sudo ln -s /opt/allure-2.17.2/bin/allure /usr/local/bin/allure
+
+              - name: Generate Allure Report
+                run: allure generate reports/allure-results --clean -o reports/allure-report
+
+              - name: Upload Allure report as artifact
+                uses: actions/upload-artifact@v4
+                with:
+                  name: allure-report
+                  path: reports/allure-report
